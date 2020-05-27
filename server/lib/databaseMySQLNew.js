@@ -27,8 +27,8 @@ if (env === 'uat') {
   DbName = 'rentrodev_test';
   domainName = 'rentronicsdev.saimrc.com'
 } else {  
-  DbName = 'rentronicsnew'
-  domainName = 'localhost:3000' 
+  DbName = 'a1abiliti_fme'
+  domainName = 'localhost:3002' 
 }
 
 module.exports = { 'prod': DbName, getFullName: getFullName, domainName: domainName, mailPass: mailPass, mailService: mailService, env: env };

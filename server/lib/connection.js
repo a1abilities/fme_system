@@ -1,6 +1,6 @@
 // This will be in some JSON config we'll say
 let dbOptions = '';
-let dbName = 'rentronicnew';
+let dbName = 'a1abiliti_fme';
 const { env } = require("../lib/databaseMySQLNew");
 
 if (env === 'dev' || env === 'uat' || env === 'prod') {

@@ -151,7 +151,7 @@ if (env === 'dev') {
 } else if (env === 'prod') {
   port = 3007;
 } else {
-  port = 3000;
+  port = 3002;
 }
 
 app.set('port', port);
