@@ -14,6 +14,8 @@ const AuthLayout = lazy(() => import('./modules/auth/layout/MainLayout'));
 const LoginPage = lazy(() => import('./modules/public/login/LoginPage'));
 const ForgotPasswordPage = lazy(() => import('./modules/public/login/ForgotPasswordPage'));
 const NoMatchPage = lazy(() => import('./modules/not-found/NoMatchPage'));
+//const Appointment =lazy(( ) =>import('./api/Appointment'));
+
 
 const Routes = () => {
   return (
@@ -42,6 +44,8 @@ const Routes = () => {
           }}
         />
         <Route component={NoMatchPage} />
+       
+
       </Switch>
     </Suspense>
   );

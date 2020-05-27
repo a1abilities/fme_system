@@ -19,6 +19,7 @@ const App = () => {
     <MuiThemeProvider theme={THEME}>
       <Provider store={STORE}>
         <Router>
+          
           <Routes />
         </Router>
       </Provider>

@@ -12,35 +12,6 @@ const PARAMS = ({ methodType = 'GET' }) => ({
 });
 
 export default {
-  // add: async ({ cancelToken, ...payload }) => {
-  //   const URL = `${c.API_CONSUMER}/api/user/register`;
-  //   try {
-  //     const { data } = await axios(URL,Object.assign({}, PARAMS({ methodType: 'POST' }), {
-  //         cancelToken,
-  //         data: payload,
-  //       }),
-  //     );
-  //     return data;
-  //   } catch (error) {
-  //     checkError(error);
-  //     throw error;
-  //   }
-  // },
-
-  // verifyEmail:async ({ cancelToken, ...payload }) => {
-  //   const URL = `${c.API_CONSUMER}/api/user/verifyemail`;
-  //   try {
-  //     const { data } = await axios(URL,Object.assign({}, PARAMS({ methodType: 'POST' }), {
-  //         cancelToken,
-  //         data: payload,
-  //       }),
-  //     );
-  //     return data;
-  //   } catch (error) {
-  //     checkError(error);
-  //     throw error;
-  //   }
-  // },
 
   membersList: async () => {
     const URL = `${c.API_CONSUMER}/api/appointment/membersList`;

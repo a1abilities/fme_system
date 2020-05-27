@@ -52,7 +52,7 @@ import FinanceReport from './report/FinanceReport';
 import DeliveryReport from './report/DeliveryReport';
 import TaskList from '../task/TaskList';
 import TaskReport from './report/TaskReport';
-import AppointmentSystem from '../appointment/AppointmentHome.js';
+import AppointmentSystem from '../../auth/appointment/AppointmentHome'
 import EzidebitStatus from '../order/EzidebitStatus';
 import EditDiscountEMI from './options/admin/EditEMIDiscount.js';
 import ProductManager from '../productManager/Home.js';
@@ -65,7 +65,8 @@ import { API_URL } from '../../../api/Constants';
 // API CALL
 import RoleAPI from '../../../api/franchise/Role';
 
-
+import ViewAppointment from '../appointment/Components/ViewAppointment.js'
+//import AppointmentHome from '../appointment/AppointmentHome.js'
 
 import StyledTreeItem from './StyledTreeItem';
 import EMICalculator from './Component/EMICalculator';
@@ -269,7 +270,8 @@ export default function ClippedDrawer(props) {
   }
 
 
-  function handleAppointmentClick(){
+  function handleAppointmentClick(role, role_Id){
+    setRoleAs(role);
     setShowFranchise(false);
     setShowStaff(false);
     setShowCategory(false);
@@ -736,6 +738,9 @@ export default function ClippedDrawer(props) {
             defaultExpandIcon={<ArrowRightIcon />}
             defaultEndIcon={<div style={{ width: 24 }} />}
           >
+
+            {/* <StyledTreeItem nodeId="10" labelText="Appointment" color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleAppointmentClick('Super Admin', 1); }} />       */}
+
             <StyledTreeItem nodeId="1" labelText="Dashboard" color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Super Admin', 1); }} />            
             <StyledTreeItem nodeId="2" labelText="Manage Franchise"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={FranchiseIcon} onClick={(event) => { handleFranchiseClick('Super Admin'); }}/>
             <StyledTreeItem nodeId="3" labelText="Manage Product Catalogue"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={ProductIcon} onClick={(event) => { handleCategoryClick('Super Admin'); }}/>
@@ -756,6 +761,7 @@ export default function ClippedDrawer(props) {
             defaultExpandIcon={<ArrowRightIcon />}
             defaultEndIcon={<div style={{ width: 24 }} />}
           >
+            {/* <StyledTreeItem nodeId="10" labelText="Appointment"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleAppointmentClick('Admin'); }} />  */}
             <StyledTreeItem nodeId="1" labelText="Dashboard"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Admin', 2); }} />            
             <StyledTreeItem nodeId="2" labelText="Manage Staff"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={StaffIcon} onClick={(event) => { handleFranchiseStaffClick('Admin'); }} />
             <StyledTreeItem nodeId="3" labelText="Manage Task"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={TaskIcon} onClick={(event) => { handleTaskClick('Admin'); }} />
@@ -773,6 +779,7 @@ export default function ClippedDrawer(props) {
             defaultExpandIcon={<ArrowRightIcon />}
             defaultEndIcon={<div style={{ width: 24 }} />}
           >
+            {/* <StyledTreeItem nodeId="10" labelText="Appointment"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleAppointmentClick('Master Staff'); }} />  */}
             <StyledTreeItem nodeId="1" labelText="Dashboard"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Master Staff', 0); }} />            
             <StyledTreeItem nodeId="4" labelText="Manage Leads"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={LeadIcon} onClick={(event) => { handleLeadsClick('Master Staff'); }}/>
           </TreeView>
@@ -791,7 +798,8 @@ export default function ClippedDrawer(props) {
             {roles.find(role => role === 'S&M')
             ?
             <StyledTreeItem nodeId="1" labelText="Sales &amp; Marketing"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PersonAddIcon}>
-                {/* <StyledTreeItem nodeId="35" labelText="Appointment Manager" color="#1a73e8" bgColor="#e8f0fe" labelIcon={DateRangeIcon} onClick={(event) => { handleAppointmentClick(); }} /> */}
+                 
+                 <StyledTreeItem nodeId="35" labelText="Appointment Manager" color="#1a73e8" bgColor="#e8f0fe" labelIcon={DateRangeIcon} onClick={(event) => { handleAppointmentClick(); }} /> 
 
                 <Tab roleName="S&M" roleId="7" nodeId="5" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/>
 
@@ -809,7 +817,9 @@ export default function ClippedDrawer(props) {
             {roles.find(role => role === 'CSR')
             ?  
               <StyledTreeItem nodeId="2" labelText="CSR"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={PersonAddIcon}>  
-                {/* <StyledTreeItem nodeId="36" labelText="Appointment Manager" color="#1a73e8" bgColor="#e8f0fe" labelIcon={DateRangeIcon} onClick={(event) => { handleAppointmentClick(); }} /> */}
+                
+                 <StyledTreeItem nodeId="36" labelText="Appointment Manager" color="#1a73e8" bgColor="#e8f0fe" labelIcon={DateRangeIcon} onClick={(event) => { handleAppointmentClick(); }} />
+                
                 <Tab roleName="CSR" roleId="3" nodeId="9" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/> 
                 
                 {/* <Tab roleName="CSR" roleId="3" nodeId="38" handleClick={handleProductManager} labelIcon={ShoppingCartIcon} labelText="Product Manager"/>  */}
@@ -853,6 +863,8 @@ export default function ClippedDrawer(props) {
               ?
               <StyledTreeItem nodeId="3" labelText="Finance"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={FinanceIcon}>  
                  
+                 <StyledTreeItem nodeId="36" labelText="Appointment Manager" color="#1a73e8" bgColor="#e8f0fe" labelIcon={DateRangeIcon} onClick={(event) => { handleAppointmentClick(); }} />
+
                  <Tab roleName="Finance" roleId="4" nodeId="22" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/> 
                  
                  {/* <Tab roleName="Finance" roleId="4" nodeId="39" handleClick={handleProductManager} labelIcon={ShoppingCartIcon} labelText="Product Manager"/>  */}
@@ -876,6 +888,8 @@ export default function ClippedDrawer(props) {
             ?
               <StyledTreeItem nodeId="4" labelText="Delivery"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={DeliveryIcon}>  
 
+                <StyledTreeItem nodeId="36" labelText="Appointment Manager" color="#1a73e8" bgColor="#e8f0fe" labelIcon={DateRangeIcon} onClick={(event) => { handleAppointmentClick(); }} />
+                
                 <Tab roleName="Delivery" roleId="6" nodeId="28" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/> 
 
                 <Tab roleName="Delivery" nodeId="29" handleClick={handleTaskClick} labelIcon={TaskIcon} labelText="Manage Task"/> 
@@ -954,7 +968,7 @@ export default function ClippedDrawer(props) {
           editEMIDiscountOpen ? <EditDiscountEMI open = {editEMIDiscountOpen} handleClose = {handleEditEMIDiscountClose}/>: null
         }
         {
-          showAppointment ? <AppointmentSystem /> : null
+          showAppointment ? <ViewAppointment />:null
         }
         {
           showProductManager ? <ProductManager roleName={roleAs}  /> : null 

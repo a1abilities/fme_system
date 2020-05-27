@@ -1,72 +1,25 @@
 import React, {useState, useEffect, Fragment} from 'react';
 import ReactDOM from 'react-dom';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import CachedIcon from '@material-ui/icons/Cached';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import EditIcon from '@material-ui/icons/Edit';
 import Paper from '@material-ui/core/Paper';
-import PrintIcon from '@material-ui/icons/Print';
-import PaymentIcon from '@material-ui/icons/Payment';
-import CloudUpload from '@material-ui/icons/CloudUpload';
-import SendIcon from '@material-ui/icons/Send.js';
-import ViewIcon from '@material-ui/icons/RemoveRedEye';
-import CommentIcon from '@material-ui/icons/Comment';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CancelIcon from '@material-ui/icons/Cancel';
-import TablePagination from '@material-ui/core/TablePagination';
-import CreateIcon from '@material-ui/icons/Create';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import UpdateIcon from '@material-ui/icons/Update';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
-import TableFooter from '@material-ui/core/TableFooter';
-import DetailsIcon from '@material-ui/icons/Details';
-import Popover from '@material-ui/core/Popover';
 import Grid from '@material-ui/core/Grid';
-import BackArrowIcon from '@material-ui/icons/ArrowBack';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardTimePicker, DatePicker, KeyboardDatePicker} from '@material-ui/pickers';
-
-
-
+import { MuiPickersUtilsProvider, DatePicker} from '@material-ui/pickers';
+import Button from '@material-ui/core/Button';
 
 // Component
 import {generateTimingTable} from '../lib/TimingTable';
-import {TablePaginationActions} from '../../../common/Pagination';
-import { API_URL } from '../../../../api/Constants';
-import {useCommonStyles} from '../../../common/StyleComman';
-import {getDate, setTime, getCurrentDate, getTimeinDBFormat, getTime, get12HourTime } from '../../../../utils/datetime';
+import {getDate} from '../../../../utils/datetime.js';
 import TimingBoard from './TimingBoard.js';
 import ClientTable from './ClientTable.js';
+import {APP_TOKEN} from '../../../../api/Constants.js';
+import UpdateTimeslot from './UpdateTimeslot.js';
 
 // API
-import AppointmentAPI from '../../../../api/Appointment.js';
-
-
-const StyledTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(13),
-  },
-  body: {
-    fontSize: 11,
-  },
-}))(TableCell);
+import AppointmentAPI from '../../../../api/Appointment.js'
+import { updateLocale } from 'moment';
 
 const useStyles = makeStyles(theme => ({
   textsize:{
@@ -79,14 +32,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ViewAppointment({handleMainPage, userData}) {  
-  const classes = useStyles();    
+export default function ViewAppointment() { 
+  const classes = useStyles();
+
   const [appointmentDate, setAppointmentDate] = useState(null);
   const [timingTable, setTimingTable] = useState(generateTimingTable);
   const [currentTimeslotList, setCurrentTimeslotList] = useState([]);
   const [appointedClientList, setAppointedClientList] = useState([]);
-
-
+  const [timeslotShow, setTimeslotShow] = useState(false);
+  
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -99,6 +53,10 @@ export default function ViewAppointment({handleMainPage, userData}) {
     setPage(0);
   };    
 
+  const  handleTimeslotOpen = () => {
+    setTimeslotShow(true)
+   }
+
 
   useEffect(() => {    
     getCurrentTimeslot();    
@@ -106,7 +64,7 @@ export default function ViewAppointment({handleMainPage, userData}) {
 
   const getCurrentTimeslot = async () => {
     try{
-      const result = await AppointmentAPI.getCurrentTimeslot({ userId : userData.id });
+      const result = await AppointmentAPI.getCurrentTimeslot({ });
       setCurrentTimeslotList(result.timeSlot);
       setFirstAvailableDate(result.timeSlot);
     }catch(e){
@@ -116,7 +74,7 @@ export default function ViewAppointment({handleMainPage, userData}) {
 
   const getAppointedClientList = async () => {
     try{
-      const result = await AppointmentAPI.getAppointedClientList({ userId : userData.id, date : appointmentDate });      
+      const result = await AppointmentAPI.getAppointedClientList({date: getDate(appointmentDate)});      
       setAppointedClientList(result.clientList);
       setPage(0);
       setRowsPerPage(10);
@@ -176,20 +134,24 @@ export default function ViewAppointment({handleMainPage, userData}) {
 
   
   return (  
-    <Grid container spacing={2} alignItems = "center"> 
-        <Grid item xs={12} sm={12}>
-          <div style = {{display: 'flex'}}>
-            <Tooltip title="Back to Home">
-              <IconButton  size="small" component="span" onClick = {handleMainPage}> <BackArrowIcon/> </IconButton>
-            </Tooltip>
+    <div>
+    <Grid container spacing={4}  direction="row" justify="center" alignItems="center">
+        <Grid item xs={12} sm={5}>
+          <div style = {{display: 'flex'}}>            
             <Typography variant="h6" className={classes.labelTitle}> View Appointment </Typography>
           </div>
         </Grid>
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={5}>
+          <div style = {{float: 'right'}}>            
+          <Button variant="text" color="primary" className={classes.button} onClick={handleTimeslotOpen} >
+            Update Timeslot
+          </Button>
+          </div>
+        </Grid>
+        <Grid item xs={12} sm={10}>
           <Typography  className={classes.textHeading} htmlFor="appointment_date">Appointment Date</Typography>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DatePicker
-              autoOk
               variant = "inline"              
               margin="dense"
               id="appointment_date"
@@ -209,15 +171,17 @@ export default function ViewAppointment({handleMainPage, userData}) {
             />
           </MuiPickersUtilsProvider>
         </Grid>
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={8}>
           <Typography  className={classes.textHeading} htmlFor="">TIMING BOARD</Typography>
           <Paper style={{ width: '100%' }}>
             <div id = "timingBoard"></div>
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={10}>
           <ClientTable ClientList = {appointedClientList} page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>
         </Grid>
     </Grid>
+    {timeslotShow ? <UpdateTimeslot open={timeslotShow} setTimeslotShow={setTimeslotShow} /> : null}
+    </div>
   )
 }

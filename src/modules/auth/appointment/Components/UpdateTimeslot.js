@@ -1,48 +1,24 @@
 import React, { useEffect, useState, Fragment } from 'react';
 
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
-import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import CachedIcon from '@material-ui/icons/Cached';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import EditIcon from '@material-ui/icons/Edit';
-import PrintIcon from '@material-ui/icons/Print';
-import PaymentIcon from '@material-ui/icons/Payment';
-import CloudUpload from '@material-ui/icons/CloudUpload';
-import SendIcon from '@material-ui/icons/Send.js';
-import ViewIcon from '@material-ui/icons/RemoveRedEye';
-import CommentIcon from '@material-ui/icons/Comment';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CancelIcon from '@material-ui/icons/Cancel';
-import TablePagination from '@material-ui/core/TablePagination';
-import CreateIcon from '@material-ui/icons/Create';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import BackArrowIcon from '@material-ui/icons/ArrowBack';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
-import UpdateIcon from '@material-ui/icons/Update';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
-import TableFooter from '@material-ui/core/TableFooter';
-import DetailsIcon from '@material-ui/icons/Details';
-import { API_URL } from '../../../../api/Constants';
-import {useCommonStyles} from '../../../common/StyleComman';
-import Popover from '@material-ui/core/Popover';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import Button from '@material-ui/core/Button';
-import {TablePaginationActions} from '../../../common/Pagination';
+import Slide from '@material-ui/core/Slide';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Dialog from '@material-ui/core/Dialog';
+import IconButton from '@material-ui/core/IconButton';
+
+
 
 // Components
 import {getDateWithFullMonthNDay, setTime, get12HourTime} from '../../../../utils/datetime.js'
@@ -51,22 +27,7 @@ import AddUpdateTimeslot from './AddUpdateTimeslot';
 // API Call
 import AppointmentAPI from '../../../../api/Appointment.js';
 
-
-const StyledTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(13),
-  },
-  body: {
-    fontSize: 11,
-  },
-}))(TableCell);
-
 const useStyles = makeStyles(theme => ({
-  textsize:{
-    fontSize: theme.typography.pxToRem(12),
-  },
   fonttransform:{
     textTransform:"initial",
     fontSize: theme.typography.pxToRem(13),
@@ -75,6 +36,25 @@ const useStyles = makeStyles(theme => ({
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.pxToRem(20),
     color: theme.palette.text.secondary,        
+  },
+  appBar: {
+    position: 'relative',
+    height: theme.spacing(5),
+  },
+  title: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    fontSize: theme.typography.pxToRem(14),
+    color:"white",
+    marginTop:theme.spacing(-3),
+  },
+  closeIcon: {
+    marginTop:theme.spacing(-3),
+    color: 'white',
+    // fontSize: '10px',
+    marginRight:theme.spacing(-4),
   },
   listPrimaryItem: {
     fontWeight: theme.typography.fontWeightBold,
@@ -90,7 +70,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function UpdateTimeslot({handleMainPage, userData}) {
+const Transition = React.forwardRef((props, ref) => {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+
+export default function UpdateTimeslot({open, setTimeslotShow}) {
   const classes = useStyles();
   const [currentTimeslotList, setCurrentTimeslotList] = useState([]);
   const [showTimslotDialog, setShowTimslotDialog] = useState(false);
@@ -108,7 +93,7 @@ export default function UpdateTimeslot({handleMainPage, userData}) {
 
   const getCurrentTimeslot = async () => {
     try{
-      const result = await AppointmentAPI.getCurrentTimeslot({ userId : userData.id });
+      const result = await AppointmentAPI.getCurrentTimeslot({ });
       setCurrentTimeslotList(result.timeSlot);      
     }catch(e){
       console.log('getCurrentTimeslot Error...', e);
@@ -135,7 +120,8 @@ export default function UpdateTimeslot({handleMainPage, userData}) {
         appointment_status : status,
         date : data.date,
       });
-      setCurrentTimeslotList(result.timeSlot);      
+      setCurrentTimeslotList(result.timeSlot);   
+      console.log(result)   ;
     }catch(e){
       console.log('handleLeave Error...', e);
     }
@@ -157,7 +143,7 @@ export default function UpdateTimeslot({handleMainPage, userData}) {
   const handleOpenTimeslotDialog = (data, operation) => {
     setOperation(operation);
     if(operation === 'add'){
-      setSelectedTimeslot({user_id : userData.id});
+      setSelectedTimeslot({});
     }else if(operation === 'update'){
       setSelectedTimeslot(data);
     }
@@ -173,7 +159,7 @@ export default function UpdateTimeslot({handleMainPage, userData}) {
     currentTimeslotList.map((data, index) => {
       if(currentRow.date === data.date){
         gridList.push(
-          <Grid container alignItems = "center">
+          <Grid container spacing={4}  direction="row" justify="center" alignItems="center">
             <Grid item xs={12} sm={6}>
               <Typography className={classes.listSecondaryItem} color="textPrimary" >
                 { get12HourTime(setTime(data.start_time)) + '  -  ' + get12HourTime(setTime(data.end_time))}
@@ -194,21 +180,27 @@ export default function UpdateTimeslot({handleMainPage, userData}) {
 
   return (  
   <div>
-    <Grid container spacing={2} alignItems = "center">
-      <Grid item xs={12} sm={6}>
-        <div style = {{display: 'flex'}}>
-          <Tooltip title="Back to Home">
-            <IconButton  size="small" component="span" onClick = {handleMainPage}> <BackArrowIcon/> </IconButton>
-          </Tooltip>
+    <Dialog maxWidth="lg" open={open} TransitionComponent={Transition}>
+      <AppBar className={classes.appBar}>
+        <Toolbar>
+          <Typography variant="h6" className={classes.title}>
+            {/* Add Customer */}
+          </Typography>
+          <IconButton size="small" onClick={() => {setTimeslotShow(false)}} className={classes.closeIcon}> x </IconButton>
+        </Toolbar>
+      </AppBar>
+    <Grid container spacing={4}  direction="row" justify="center" alignItems="center">
+      <Grid item xs={12} sm={5}>
+        <div style = {{display: 'flex', marginTop: '20px'}}>
           <Typography variant="h6" className={classes.labelTitle}> UPDATE TIMESLOT </Typography>
         </div>        
       </Grid>
-      <Grid item xs={12} sm={6} justify = "flex-start" align="right">
-        <Fab variant="extended" size="small" color="primary" className={classes.fonttransform}  onClick = {() => {handleOpenTimeslotDialog([], 'add')}}>
+      <Grid item xs={12} sm={5} justify = "flex-start" align="right">
+        <Fab variant="extended" size="small" color="primary" style = {{marginTop: '20px'}} className={classes.fonttransform}  onClick = {() => {handleOpenTimeslotDialog([], 'add')}}>
           <AddIcon className={classes.extendedIcon} /> ADD TIMESLOT
         </Fab>        
       </Grid>      
-      <Grid item xs={12} sm={12}>
+      <Grid item xs={12} sm={10}>
         <List className={classes.root}>
           {(uniqueAppointment.length > 0 && uniqueAppointment != "" ? uniqueAppointment : []).map((data, index) => {
             return(
@@ -248,6 +240,7 @@ export default function UpdateTimeslot({handleMainPage, userData}) {
       </Grid>
     </Grid>
     { showTimslotDialog ? <AddUpdateTimeslot open = {showTimslotDialog} handleClose = {handleCloseTimeslotDialog} operation={operation} selectedTimeslot = {selectedTimeslot} setCurrentTimeslotList={setCurrentTimeslotList} /> : null }
+    </Dialog>
   </div>
   )
 }

@@ -4,74 +4,37 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import Grid from '@material-ui/core/Grid';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
-import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import CachedIcon from '@material-ui/icons/Cached';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
-import BackArrowIcon from '@material-ui/icons/ArrowBack';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import EditIcon from '@material-ui/icons/Edit';
-import PrintIcon from '@material-ui/icons/Print';
-import PaymentIcon from '@material-ui/icons/Payment';
-import CloudUpload from '@material-ui/icons/CloudUpload';
-import SendIcon from '@material-ui/icons/Send.js';
-import ViewIcon from '@material-ui/icons/RemoveRedEye';
-import CommentIcon from '@material-ui/icons/Comment';
 import Paper from '@material-ui/core/Paper';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CancelIcon from '@material-ui/icons/Cancel';
-import TablePagination from '@material-ui/core/TablePagination';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
-import CreateIcon from '@material-ui/icons/Create';
-import List from '@material-ui/core/List';
 import MenuItem from '@material-ui/core/MenuItem';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardTimePicker, DatePicker, KeyboardDatePicker} from '@material-ui/pickers';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import { MuiPickersUtilsProvider, DatePicker, useStaticState} from '@material-ui/pickers';
 import Divider from '@material-ui/core/Divider';
-import UpdateIcon from '@material-ui/icons/Update';
 import TextField from '@material-ui/core/TextField';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
-import TableFooter from '@material-ui/core/TableFooter';
-import DetailsIcon from '@material-ui/icons/Details';
-import Popover from '@material-ui/core/Popover';
-import PropTypes from 'prop-types';
-import {TablePaginationActions} from '../../../common/Pagination';
+
 
 
 // Component
-import {useCommonStyles} from '../../../common/StyleComman.js';
-import useSignUpForm from '../../franchise/CustomHooks';
-import validate from '../../../common/validation/BookingAppointment.js';
-import {getDate, setTime, getCurrentDate, getTimeinDBFormat, getTime, get12HourTime } from '../../../../utils/datetime';
+import validate from '../../../validations/BookingAppointment.js';
+import {getDate, setTime, getTime } from '../../../utils/datetime';
 import {generateTimingTable} from '../lib/TimingTable';
 import TimingBoard from './TimingBoard.js';
+import customHooks from '../../../common/CustomHooks';
+
 
 // API
-import AppointmentAPI from '../../../../api/Appointment.js';
+//import AppointmentAPI from '../../../api/Appointment.js';
+import AppointmentAPI from '../../../../api/Appointment.js'
 import moment from 'moment';
 
 
-const StyledTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(13),
-  },
-  body: {
-    fontSize: 11,
-  },
-}))(TableCell);
 
 const useStyles = makeStyles(theme => ({
   textsize:{
@@ -102,20 +65,22 @@ const RESET_VALUES = {
 };
 
 
-export default function BookAppointment({handleMainPage, userData}) {
+export default function BookAppointment(props) {
   const classes = useStyles();
-  
+  const userData = props.data;
+  const fdbName = props.fdbName;
   const [currentTimeslotList, setCurrentTimeslotList] = useState([]);
   const [timingTable, setTimingTable] = useState(generateTimingTable);
   const [submitTime, setSubmitTime] = useState(0);
-
+  const [rerenderTimingBoard, setRerenderTimingBoard] = useState(0);
+  
   useEffect(() => {
     getCurrentTimeslot();
   },[]);
 
   const getCurrentTimeslot = async () => {
     try{
-      const result = await AppointmentAPI.getCurrentTimeslot({ userId : userData.id });
+      const result = await AppointmentAPI.getCurrentTimeslot({ userId : userData.id, franchiseId: userData.franchise_id });
       setCurrentTimeslotList(result.timeSlot);
       setFirstAvailableDate(result.timeSlot);
     }catch(e){
@@ -124,13 +89,13 @@ export default function BookAppointment({handleMainPage, userData}) {
   }
   
   
-  const setFirstAvailableDate = (timeSlot) => {
+  const setFirstAvailableDate = (timeSlot) => {    
     const firstDate = (timeSlot.length > 0 ? timeSlot : []).find((data) => {
       return data.status === 1
-    });
+    });    
     setInput('appointment_date', firstDate.date);
   }
-
+  
 
   const handleDateAvaibility = (date) => {
     const found = (currentTimeslotList.length > 0 ? currentTimeslotList : []).find((data) => {
@@ -185,7 +150,8 @@ export default function BookAppointment({handleMainPage, userData}) {
   const submitForm = async () => {
     try{
       const result = await AppointmentAPI.bookAppointment({
-        userId : userData.id, 
+        userId : userData.id,
+        franchiseId : userData.franchise_id,
         date : getDate(inputs.appointment_date),
         meeting_time : inputs.meeting_time,
         start_time : inputs.start_time,
@@ -208,39 +174,38 @@ export default function BookAppointment({handleMainPage, userData}) {
     }
   }
 
-  const handleRecallTimingBoard = async () => {
-    ReactDOM.render(
-        <TimingBoard
-          selectedDate = {getDate(inputs.appointment_date)} 
-          currentTimeslotList={currentTimeslotList}
-          timingTable = {timingTable}
-          handleAppointTimeSelection = {handleAppointTimeSelection}      
-          submitTime = {submitTime}
-          viewOnly = {false}
-        />, 
-        document.getElementById('timingBoard')
-    );
-    resetTiming();
-  }
   
-  const { inputs, handleDateChange, handleNumberInput, handleInputChange, handleSubmit, handleReset, handleRandomInput, setInput, errors } = useSignUpForm(    
+  // const handleRecallTimingBoard = async () => {
+  //   ReactDOM.render(
+  //       <TimingBoard
+  //         selectedDate = {getDate(inputs.appointment_date)} 
+  //         currentTimeslotList={currentTimeslotList}
+  //         timingTable = {timingTable}
+  //         handleAppointTimeSelection = {handleAppointTimeSelection}      
+  //         submitTime = {submitTime}
+  //         viewOnly = {false}
+  //       />, 
+  //       document.getElementById('timingBoard')
+  //   );
+  //   resetTiming();
+  // }
+  
+  const { inputs, handleDateChange, handleNumberInput, handleInputChange, handleSubmit, handleReset, handleRandomInput, setInput, errors } = customHooks(    
     RESET_VALUES,
     submitForm,
     validate,
   );
   
   useEffect(() => {
-    handleRecallTimingBoard();
+    // handleRecallTimingBoard();
+    setRerenderTimingBoard(rerenderTimingBoard + 1);
+    resetTiming();
   },[inputs.appointment_date, inputs.meeting_time, submitTime]);
 
-
   return (
-      <Grid container spacing={2} alignItems = "center">
-        <Grid item xs={12} sm={12}>
+    <Grid container spacing={4}  direction="row" justify="center" alignItems="center">
+        <Grid item xs={12} sm={10}>
           <div style = {{display: 'flex'}}>
-            <Tooltip title="Back to Home">
-              <IconButton  size="small" component="span" onClick = {handleMainPage}> <BackArrowIcon/> </IconButton>
-            </Tooltip>
             <Typography variant="h6" className={classes.labelTitle}> Book Appointment </Typography>
           </div>
           <Divider variant="fullWidth" />
@@ -269,7 +234,6 @@ export default function BookAppointment({handleMainPage, userData}) {
           <Typography  className={classes.textHeading} htmlFor="appointment_date">Appointment Date</Typography>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DatePicker
-              autoOk
               variant = "inline"              
               margin="dense"
               id="appointment_date"
@@ -281,7 +245,7 @@ export default function BookAppointment({handleMainPage, userData}) {
               InputProps={{
                 classes: {
                   input: classes.textsize,
-                },                
+                },
               }}
               fullWidth
               onChange={(date) => {handleDateChange('appointment_date', date)}}
@@ -289,13 +253,23 @@ export default function BookAppointment({handleMainPage, userData}) {
             />
           </MuiPickersUtilsProvider>
         </Grid>
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={8}>
           <Typography  className={classes.textHeading} htmlFor="">TIMING BOARD</Typography>
           <Paper style={{ width: '100%' }}>
-            <div id = "timingBoard"></div>
+            {/* <div id = "timingBoard"></div>*/}
+            {rerenderTimingBoard && 
+                  <TimingBoard
+                    selectedDate = {getDate(inputs.appointment_date)} 
+                    currentTimeslotList={currentTimeslotList}
+                    timingTable = {timingTable}
+                    handleAppointTimeSelection = {handleAppointTimeSelection}      
+                    submitTime = {submitTime}
+                    viewOnly = {false}
+                  />
+            }
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={10}>
           <Typography className={classes.textHeading} htmlFor="">FILL CLIENT's INFORMATION</Typography>
           <Paper style={{ width: '100%' }}>
             <Table>

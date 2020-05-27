@@ -1,5 +1,4 @@
-import React from 'react';
-
+import React, { useState } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -7,48 +6,25 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import CachedIcon from '@material-ui/icons/Cached';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import EditIcon from '@material-ui/icons/Edit';
-import PrintIcon from '@material-ui/icons/Print';
-import PaymentIcon from '@material-ui/icons/Payment';
-import CloudUpload from '@material-ui/icons/CloudUpload';
-import SendIcon from '@material-ui/icons/Send.js';
-import ViewIcon from '@material-ui/icons/RemoveRedEye';
-import CommentIcon from '@material-ui/icons/Comment';
+import Paper from '@material-ui/core/Paper';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import ContactPhoneIcon from '@material-ui/icons/ContactPhone';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CancelIcon from '@material-ui/icons/Cancel';
 import TablePagination from '@material-ui/core/TablePagination';
-import CreateIcon from '@material-ui/icons/Create';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import Grid from '@material-ui/core/Grid';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import UpdateIcon from '@material-ui/icons/Update';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
 import TableFooter from '@material-ui/core/TableFooter';
-import DetailsIcon from '@material-ui/icons/Details';
+import {Link} from 'react-router-dom';
 
-import {useCommonStyles} from '../../../common/StyleComman';
-import Popover from '@material-ui/core/Popover';
-import PropTypes from 'prop-types';
-
+// Components
 import {TablePaginationActions} from '../../../common/Pagination';
-import { APP_TOKEN } from '../../../../api/Constants';
+import SelectFilter from './SelectFilter.js';
 
 
 const StyledTableCell = withStyles(theme => ({
   head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    backgroundColor: 'black',
+    color: 'white',
     fontSize: theme.typography.pxToRem(13),
   },
   body: {
@@ -65,19 +41,27 @@ const useStyles = makeStyles(theme => ({
     fontSize: theme.typography.pxToRem(20),
     color: theme.palette.text.secondary,        
   },
+  root: {
+    flexGrow: 1,
+  },
+  
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'left',
+    color: theme.palette.text.secondary,
+  },
 }));
 
-export default function HomeTable({membersList, roleList,  
-  handleBookAppointment, handleViewAppointment, handleUpdateTimeSlot, 
+export default function HomeTable({membersList, fdbName, roleList, franchiseList, handleSubmit, inputs, errors, handleInputChange,
   page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
   
-  const userId = Number(APP_TOKEN.get().userId);
-  const classes = useStyles();    
+  const classes = useStyles();   
+
 
   const handleUserRoles = (data) => {
     let roles = '';
 
-    ((data.role_id && data.role_id.split(',')) || []).map((a, index) =>{      
+    ((data.role_id && data.role_id.split(',')) || []).map((a, index) => {      
       (roleList != undefined && roleList != null && roleList.length > 0 ? roleList : []).map((ele)=>{
         if(data.role_id.split(',').length-1 === index && data.role_id.split(',')[index] == ele.id){
           roles = roles + ele.name
@@ -88,13 +72,22 @@ export default function HomeTable({membersList, roleList,
     })
     return roles;
   }
+
   
-    return (  
-    <Grid container spacing={2} alignItems = "center">
-      <Grid item xs={12} sm={12}>
-        <Typography variant="h6" className={classes.labelTitle}> Franchise Members </Typography>
-      </Grid>
-      <Grid item xs={12} sm={12}>
+
+  
+  return ( 
+    <div className={classes.root}>
+      <Paper className={classes.paper}>
+        <Grid container spacing={4}  direction="row" justify="center" alignItems="center">
+          <Grid item xs={12} sm={10}>
+            <Typography variant="h6" className={classes.labelTitle}> Franchise Members </Typography>
+          </Grid>
+          <Grid item xs={12} sm={10}>
+            <SelectFilter franchiseList ={franchiseList} roleList={roleList} inputs={inputs} errors={errors} 
+            handleInputChange={handleInputChange} handleSubmit={handleSubmit} />
+          </Grid>
+          <Grid item xs={12} sm={10}>
         <Table stickyHeader >
           <TableHead>
             <TableRow>
@@ -106,7 +99,7 @@ export default function HomeTable({membersList, roleList,
               <StyledTableCell>Action</StyledTableCell>
             </TableRow>
           </TableHead>
-          <TableBody>        
+          <TableBody>
               {membersList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data,index) => {
                 return(
                   <TableRow key={Math.random()}>
@@ -120,25 +113,11 @@ export default function HomeTable({membersList, roleList,
                       <StyledTableCell>
                         <Tooltip title="Book Appointment">
                           <span>
-                            <IconButton  size="small" onClick={(event) => { handleBookAppointment(data); }} >
-                              <ContactPhoneIcon />  
-                            </IconButton>
-                          </span>
-                        </Tooltip>
-
-                        <Tooltip title="View Appointment">
-                          <span>
-                            <IconButton  size="small" onClick={(event) => { handleViewAppointment(data); }} disabled = {userId !== data.id} >
-                              <DateRangeIcon /> 
-                            </IconButton>
-                          </span>
-                        </Tooltip>
-
-                        <Tooltip title="Update Timeslot">
-                          <span>
-                            <IconButton  size="small" onClick={(event) => { handleUpdateTimeSlot(data); }} disabled = {userId !== data.id} >
-                              <EditIcon />
-                            </IconButton>
+                            {/* <IconButton  size="small" onClick={(event) => { handleBookAppointment(data); }} > */}
+                              <Link to= {{pathname:"/bookappointment", state : {data:data, fdbName: fdbName}}}>
+                                <ContactPhoneIcon />
+                              </Link>
+                            {/* </IconButton> */}
                           </span>
                         </Tooltip>
                       </StyledTableCell>
@@ -167,5 +146,7 @@ export default function HomeTable({membersList, roleList,
         </Table>    
       </Grid>
     </Grid>
+    </Paper>
+  </div> 
   )
 }

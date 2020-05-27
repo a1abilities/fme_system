@@ -1,87 +1,35 @@
 import React, { useEffect } from 'react';
-
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import Grid from '@material-ui/core/Grid';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import CachedIcon from '@material-ui/icons/Cached';
 import IconButton from '@material-ui/core/IconButton';
-import BackArrowIcon from '@material-ui/icons/ArrowBack';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import EditIcon from '@material-ui/icons/Edit';
-import PrintIcon from '@material-ui/icons/Print';
-import PaymentIcon from '@material-ui/icons/Payment';
-import CloudUpload from '@material-ui/icons/CloudUpload';
-import SendIcon from '@material-ui/icons/Send.js';
-import ViewIcon from '@material-ui/icons/RemoveRedEye';
-import CommentIcon from '@material-ui/icons/Comment';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CancelIcon from '@material-ui/icons/Cancel';
-import TablePagination from '@material-ui/core/TablePagination';
-import CreateIcon from '@material-ui/icons/Create';
 import Dialog from '@material-ui/core/Dialog';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import Slide from '@material-ui/core/Slide';
-import Divider from '@material-ui/core/Divider';
-import UpdateIcon from '@material-ui/icons/Update';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import TableFooter from '@material-ui/core/TableFooter';
-import DetailsIcon from '@material-ui/icons/Details';
 import Paper from '@material-ui/core/Paper';
 import InputLabel from '@material-ui/core/InputLabel';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
-import Popover from '@material-ui/core/Popover';
-import PropTypes from 'prop-types';
-import moment from 'moment';
 
 // Components
-import {TablePaginationActions} from '../../../common/Pagination';
-import {useCommonStyles} from '../../../common/StyleComman.js';
-import useSignUpForm from '../../franchise/CustomHooks';
-import validate from '../../../common/validation/AppointmentTimeslotDialog';
+import customHooks from '../../../common/CustomHooks';
+import validate from '../../../common/validation/AppointmentTimeslotDialog.js';
 import {getDate, setTime, getCurrentDate, getTimeinDBFormat, get12HourTime } from '../../../../utils/datetime'
 
 // API 
-import AppointmentAPI from '../../../../api/Appointment.js';
+//import AppointmentAPI from '../../../api/Appointment.js';
+
+import AppointmentAPI from '../../../../api/Appointment.js'
 
 
-
-const StyledTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    fontSize: theme.typography.pxToRem(13),
-  },
-  body: {
-    fontSize: 11,
-  },
-}))(TableCell);
 
 const useStyles = makeStyles(theme => ({
   textsize:{
     fontSize: theme.typography.pxToRem(12),
-  },
-  labelTitle: {
-    fontWeight: theme.typography.fontWeightBold,
-    fontSize: theme.typography.pxToRem(20),
-    color: theme.palette.text.secondary,        
   },
   appBar: {
     position: 'relative',
@@ -108,15 +56,18 @@ const useStyles = makeStyles(theme => ({
   textsize:{
     fontSize: theme.typography.pxToRem(12),
   },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'left',
-    color: theme.palette.text.secondary,
-  },
   button:{
     color:"white",
     fontSize: theme.typography.pxToRem(10),
     margin: theme.spacing(1),
+  },
+  closeIcon: {
+    marginTop:theme.spacing(-3),
+    color: 'white', 
+    fontSize: theme.typography.pxToRem(14),
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    marginRight:theme.spacing(-1),
   },
 }));
 
@@ -132,7 +83,7 @@ const RESET_VALUES = {
 };
 
 export default function AddUpdateTimeslot({open, handleClose, operation, selectedTimeslot, setCurrentTimeslotList}) {
-  const styleClass = useCommonStyles();
+  
   const classes = useStyles();    
 
   const [ploading, setpLoading] = React.useState(false);
@@ -153,6 +104,8 @@ export default function AddUpdateTimeslot({open, handleClose, operation, selecte
   }
 
   const submitTimeslot = async () => {
+    setSavebtn(true);
+    setpLoading(true);
     try{     
       const result = await AppointmentAPI.addOrUpdateTimeslot({
         userId: selectedTimeslot.user_id,
@@ -167,9 +120,11 @@ export default function AddUpdateTimeslot({open, handleClose, operation, selecte
     }catch(e){
       console.log('handleLeave Error...', e);
     }
+    setSavebtn(false);
+    setpLoading(false);
   }
   
-  const { inputs, handleDateChange, handleSubmit, handleRandomInput, setInput, errors } = useSignUpForm(    
+  const { inputs, handleDateChange, handleSubmit, handleRandomInput, setInput, errors } = customHooks(    
     RESET_VALUES,
     submitTimeslot,
     validate
@@ -183,7 +138,7 @@ export default function AddUpdateTimeslot({open, handleClose, operation, selecte
             <Typography variant="h6" className={classes.title}>
               Add Timeslot
             </Typography>              
-            <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
+            <IconButton size="small" onClick={handleClose} className={classes.closeIcon}> x </IconButton>
           </Toolbar>
         </AppBar>
         <div className={classes.root}>
@@ -194,8 +149,6 @@ export default function AddUpdateTimeslot({open, handleClose, operation, selecte
                 <InputLabel  className={classes.textsize} htmlFor="date">Date *</InputLabel>
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
-                      autoOk
-                      variant = "inline"
                       margin="dense"
                       id="date"
                       name="date"
