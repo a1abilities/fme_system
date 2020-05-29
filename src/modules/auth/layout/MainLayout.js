@@ -863,7 +863,7 @@ export default function ClippedDrawer(props) {
               ?
               <StyledTreeItem nodeId="3" labelText="Finance"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={FinanceIcon}>  
                  
-                 <StyledTreeItem nodeId="36" labelText="Appointment Manager" color="#1a73e8" bgColor="#e8f0fe" labelIcon={DateRangeIcon} onClick={(event) => { handleAppointmentClick(); }} />
+                 <StyledTreeItem nodeId="37" labelText="Appointment Manager" color="#1a73e8" bgColor="#e8f0fe" labelIcon={DateRangeIcon} onClick={(event) => { handleAppointmentClick(); }} />
 
                  <Tab roleName="Finance" roleId="4" nodeId="22" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/> 
                  
@@ -888,7 +888,7 @@ export default function ClippedDrawer(props) {
             ?
               <StyledTreeItem nodeId="4" labelText="Delivery"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={DeliveryIcon}>  
 
-                <StyledTreeItem nodeId="36" labelText="Appointment Manager" color="#1a73e8" bgColor="#e8f0fe" labelIcon={DateRangeIcon} onClick={(event) => { handleAppointmentClick(); }} />
+                <StyledTreeItem nodeId="38" labelText="Appointment Manager" color="#1a73e8" bgColor="#e8f0fe" labelIcon={DateRangeIcon} onClick={(event) => { handleAppointmentClick(); }} />
                 
                 <Tab roleName="Delivery" roleId="6" nodeId="28" handleClick={handleDashboardClick} labelIcon={BusinessIcon} labelText="Dashboard"/> 
 

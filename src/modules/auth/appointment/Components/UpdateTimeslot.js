@@ -116,12 +116,10 @@ export default function UpdateTimeslot({open, setTimeslotShow}) {
       let status = data.status === 2 ? 1 : data.status === 1 ? 2 : '';
       const result = await AppointmentAPI.handleLeave({
         appointmentId : data.id,
-        userId: data.user_id,
         appointment_status : status,
         date : data.date,
       });
       setCurrentTimeslotList(result.timeSlot);   
-      console.log(result)   ;
     }catch(e){
       console.log('handleLeave Error...', e);
     }
@@ -131,10 +129,8 @@ export default function UpdateTimeslot({open, setTimeslotShow}) {
     try{      
       const result = await AppointmentAPI.removeTimeSlot({ 
         appointmentId : data.id,
-        userId: data.user_id,        
       });
-      console.log('result.....0',result.timeSlot)
-      setCurrentTimeslotList(result.timeSlot);      
+      setCurrentTimeslotList(result.timeSlot);
     }catch(e){
       console.log('removeTimeSlot Error...', e);
     }
@@ -142,9 +138,7 @@ export default function UpdateTimeslot({open, setTimeslotShow}) {
 
   const handleOpenTimeslotDialog = (data, operation) => {
     setOperation(operation);
-    if(operation === 'add'){
-      setSelectedTimeslot({});
-    }else if(operation === 'update'){
+    if(operation === 'update'){
       setSelectedTimeslot(data);
     }
     setShowTimslotDialog(true);

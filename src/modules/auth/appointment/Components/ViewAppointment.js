@@ -135,9 +135,9 @@ export default function ViewAppointment() {
   
   return (  
     <div>
-    <Grid container spacing={4}  direction="row" justify="center" alignItems="center">
-        <Grid item xs={12} sm={5}>
-          <div style = {{display: 'flex'}}>            
+    <Grid container direction="row" justify="flex-start" alignItems="center">
+        <Grid item xs={12} sm={6}>
+          <div style = {{display: 'flex'}}>
             <Typography variant="h6" className={classes.labelTitle}> View Appointment </Typography>
           </div>
         </Grid>
@@ -148,7 +148,7 @@ export default function ViewAppointment() {
           </Button>
           </div>
         </Grid>
-        <Grid item xs={12} sm={10}>
+        <Grid item xs={12} sm={11} style={{marginTop:'15px'}}>
           <Typography  className={classes.textHeading} htmlFor="appointment_date">Appointment Date</Typography>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DatePicker
@@ -167,17 +167,18 @@ export default function ViewAppointment() {
               }}
               fullWidth
               onChange = { handleDateChange }
+              
               shouldDisableDate = {(date) => { return handleDateAvaibility(date)}}
             />
           </MuiPickersUtilsProvider>
         </Grid>
-        <Grid item xs={12} sm={8}>
+        <Grid item xs={12} sm={11}>
           <Typography  className={classes.textHeading} htmlFor="">TIMING BOARD</Typography>
           <Paper style={{ width: '100%' }}>
             <div id = "timingBoard"></div>
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={10}>
+        <Grid item xs={12} sm={11}>
           <ClientTable ClientList = {appointedClientList} page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>
         </Grid>
     </Grid>

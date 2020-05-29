@@ -1,41 +1,20 @@
 import React, { useEffect, useState, Fragment } from 'react';
 
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import CachedIcon from '@material-ui/icons/Cached';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import EditIcon from '@material-ui/icons/Edit';
-import PrintIcon from '@material-ui/icons/Print';
-import PaymentIcon from '@material-ui/icons/Payment';
-import CloudUpload from '@material-ui/icons/CloudUpload';
-import SendIcon from '@material-ui/icons/Send.js';
-import ViewIcon from '@material-ui/icons/RemoveRedEye';
-import CommentIcon from '@material-ui/icons/Comment';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CancelIcon from '@material-ui/icons/Cancel';
-import TablePagination from '@material-ui/core/TablePagination';
-
-import Divider from '@material-ui/core/Divider';
-import Button from '@material-ui/core/Button';
+import {Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  Typography,
+  Divider, 
+  Button,
+} from '@material-ui/core';
 import moment from 'moment';
 
 // Components
-import AddUpdateTimeslot from './AddUpdateTimeslot';
-import {getDate, getCurrentDate, getTimeinDBFormat, getTime, get12HourTime } from '../../../../utils/datetime';
+import {getTime} from '../../../../utils/datetime';
 
 // API Call
-//import AppointmentAPI from '../../../api/Appointment.js';
 import AppointmentAPI from '../../../../api/Appointment.js'
 
 

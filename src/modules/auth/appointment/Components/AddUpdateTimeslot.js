@@ -88,7 +88,7 @@ export default function AddUpdateTimeslot({open, handleClose, operation, selecte
 
   const [ploading, setpLoading] = React.useState(false);
   const [savebtn, setSavebtn] = React.useState(false);
-  
+  console.log(selectedTimeslot);
   useEffect(()=>{
     checkOperationIsUpdate();    
   },[]);
@@ -108,7 +108,6 @@ export default function AddUpdateTimeslot({open, handleClose, operation, selecte
     setpLoading(true);
     try{     
       const result = await AppointmentAPI.addOrUpdateTimeslot({
-        userId: selectedTimeslot.user_id,
         date : getDate(inputs.date),
         start_time : getTimeinDBFormat(inputs.start_time),
         end_time : getTimeinDBFormat(inputs.end_time), 
