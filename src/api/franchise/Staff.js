@@ -50,18 +50,37 @@ export default {
     }
   },
 
-  list: async (franchisedata) => {
+  
+  list: async ( franchisedata ) => {
     const URL = `${c.API_CONSUMER}/api/franchise/staff/list`;
     try {
-        const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'GET' }), {
-          data: franchisedata,
-        }),
-      );
-
+      const { data } = await axios(URL, {
+        method: 'POST',
+        data: franchisedata,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        headers: authHeader()}
+        );
       return data;
     } catch (error) {
       checkError();
       throw error;
     }
   },
+
+  // list: async (franchisedata) => {
+  //   const URL = `${c.API_CONSUMER}/api/franchise/staff/list`;
+  //   try {
+  //       const { data } = await axios(URL, Object.assign({}, PARAMS({ methodType: 'POST' }), {
+  //         data: franchisedata,
+  //       }),
+  //     );
+
+  //     return data;
+  //   } catch (error) {
+  //     checkError();
+  //     throw error;
+  //   }
+  // },
 };

@@ -32,6 +32,7 @@ var Staff = function (params) {
   this.token = params.token;
   this.accountId = params.accountId;
   this.searchText = params.searchText;
+  this.tabValue = params.tabValue;
 
 };
 
@@ -115,32 +116,73 @@ Staff.prototype.all = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
-      if (error) {
-        throw error;
-      }
-      if (!error) {
+      if (error) { throw error; }
+      if (!error) {        
+
+        let Query = `SELECT s.id, s.first_name, s.last_name, s.location, s.contact, s.email, s.pre_company_name, s.pre_company_address, s.pre_company_contact, s.pre_position, s.duration, s.user_id, AES_DECRYPT(s.password, 'secret') AS password, s.role, s.employment_docs, s.created_by, u.is_active, u.status FROM staff as s INNER JOIN user as u on u.id = s.franchise_user_id `;
+        
+        if(that.tabValue === 1){ // CSR
+          Query = Query + ` WHERE u.is_active = 1 AND s.role LIKE '%3%' `;
+        } else if(that.tabValue === 2){ // Finance
+          Query = Query + ` WHERE u.is_active = 1 AND s.role LIKE '%4%' `;
+        } else if(that.tabValue === 3){ // Delivery
+          Query = Query + ` WHERE u.is_active = 1 AND s.role LIKE '%5%' `;
+        } else if(that.tabValue === 4){ // HR 
+          Query = Query + ` WHERE u.is_active = 1 AND s.role LIKE '%6%' `;
+        } else if(that.tabValue === 5){ // S&M
+          Query = Query + ` WHERE u.is_active = 1 AND s.role LIKE '%7%' `;
+        } else if(that.tabValue === 6){ // Inactive Staff
+          Query = Query + ` WHERE u.is_active = 0 `;
+        } 
+        if(that.searchText !== '' ){
+          Query = Query + ` AND (s.first_name LIKE '%${that.searchText}%' OR s.last_name LIKE '%${that.searchText}%' OR s.location LIKE '%${that.searchText}%' OR s.email LIKE '%${that.searchText}%' OR s.contact LIKE '%${that.searchText}%' OR s.user_id LIKE '%${that.searchText}%') `;
+        }
+          Query = Query + ` ORDER BY id DESC;`
+
         connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
-        connection.query('select s.id, s.first_name, s.last_name, s.location, s.contact,  s.email, s.pre_company_name, s.pre_company_address, s.pre_company_contact, s.pre_position, s.duration, s.user_id, AES_DECRYPT(s.`password`, \'secret\') AS password, s.role, s.employment_docs, s.created_by, u.is_active, u.status from staff as s inner join user as u on u.id = s.franchise_user_id order by id desc', function (error, rows, fields) {
-          if (!error) {
-                let datas = [];
-                (rows && rows.length > 0 ? rows : []).map(data =>{
-                  let pass = data.password.toString('utf8');
-                  data.password = pass;
-                  datas.push(data);
-                });
+        connection.query(Query, function (error, rows, fields) {
+          if(error){console.log("Error...", error); reject(error);}
+            let datas = [];
+            (rows && rows.length > 0 ? rows : []).map(data =>{
+              let pass = data.password.toString('utf8');
+              data.password = pass;
+              datas.push(data);
+            });
             resolve(datas);
-          } else {
-            console.log("Error...", error);
-            reject(error);
-          }
         });
-      }
-      else {
-        console.log("Error...", error);
-        reject(error);
       }
       connection.release();
       console.log('Process Complete %d', connection.threadId);
+    });
+  });
+};
+
+
+Staff.prototype.countTabRecord = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) { throw error; }
+      if (!error) {       
+        
+        let Query = `SELECT 
+            COUNT(s.id) as total,
+            COUNT(CASE WHEN (u.is_active = 1 AND s.role LIKE '%3%') THEN 1 ELSE NULL END) as csr,
+            COUNT(CASE WHEN (u.is_active = 1 AND s.role LIKE '%4%') THEN 1 ELSE NULL END) as finance,
+            COUNT(CASE WHEN (u.is_active = 1 AND s.role LIKE '%5%') THEN 1 ELSE NULL END) as delivery,
+            COUNT(CASE WHEN (u.is_active = 1 AND s.role LIKE '%6%') THEN 1 ELSE NULL END) as hr,
+            COUNT(CASE WHEN (u.is_active = 1 AND s.role LIKE '%7%') THEN 1 ELSE NULL END) as snm,
+            COUNT(CASE WHEN (u.is_active = 0) THEN 1 ELSE NULL END) as inactive_staff
+            FROM staff as s INNER JOIN user as u on u.id = s.franchise_user_id`;
+            
+          connection.changeUser({ database: dbName.getFullName(dbName["prod"], that.user_id.split('_')[1]) });
+          connection.query(Query,function (error, rows, fields) {
+          if (error) {console.log("Error...", error); reject(error);}
+                resolve(rows);
+          });
+        }
+      connection.release();
+      console.log('staff counts %d', connection.threadId);
     });
   });
 };

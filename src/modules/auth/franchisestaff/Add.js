@@ -12,6 +12,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -21,6 +22,7 @@ import {useCommonStyles} from '../../common/StyleComman';
              
 import validate from '../../common/validation/FranchiseStaffRuleValidation';
 import { APP_TOKEN } from '../../../api/Constants';
+
 
 // API CALL
 import Staff from '../../../api/franchise/Staff';
@@ -75,6 +77,11 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     width: 100,
   },
+  labelTitle: {
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.pxToRem(13),
+    marginTop: 15,
+  },
   heading: {
     fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightBold,
@@ -112,19 +119,10 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 
-export default function Add({ open, handleClose, handleSnackbarClick, franchiseId, role, setFranchiseList}) {
-  const styleClass = useCommonStyles();
+export default function Add({ open, fetchStaffList, setOpen, setIsLoading, role}) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState('panel1');
-  
-  const [ploading, setpLoading] = React.useState(false);
-  const [savebtn, setSavebtn] = React.useState(true);
-  
 
-  const handleChange = panel => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
-
+  const [savebtn, setSavebtn] = React.useState(false);  
   
   const checkEmail = async (fieldName, email) => {
     try{
@@ -151,10 +149,9 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
   }
 
   const addFranchiseStaff = async () => {
-    setpLoading(true);
     setSavebtn(true);
+    setIsLoading(true);
     const data = {
-      franchise_id: franchiseId,
       id: '',
       first_name: inputs.first_name,
       last_name: inputs.last_name,
@@ -183,13 +180,11 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
     }
     
     const response = await Staff.register( { formData: formData } );
-    handleSnackbarClick(true);
-    setFranchiseList(response.staffList);
     handleReset(RESET_VALUES);
-    setpLoading(false);
     setSavebtn(false);
-    setSavebtn(true);
-    handleClose(false);
+    setIsLoading(false);    
+    setOpen(false);   
+    fetchStaffList(); 
   };
 
 
@@ -224,37 +219,21 @@ export default function Add({ open, handleClose, handleSnackbarClick, franchiseI
   },[]);
 
 return (
-    <div>
       <Dialog maxWidth="sm" open={open} TransitionComponent={Transition}>
-        <form onSubmit={handleSubmit}> 
           <AppBar className={classes.appBar}>
             <Toolbar>            
-              <Typography variant="h6" className={classes.title}>
-                Add Staff
-              </Typography>
-              <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
+              <Typography variant="h6" className={classes.title}> Add Staff </Typography>
+                <IconButton size="small" onClick={()=>{setOpen(false)}} className={classes.closeIcon}> x </IconButton>
             </Toolbar>
           </AppBar>
-
           <div className={classes.root}>
-                  
-            <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
-            <ExpansionPanel
-              className={classes.expansionTitle}
-              expanded={expanded === 'panel1'}
-              onChange={handleChange('panel1')}
-            >
-              <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls=""
-                id="panel1a-header"
-              >
-                <Typography className={(errors.first_name||errors.last_name||errors.location||errors.contact||errors.email)?classes.errorHeading:classes.heading}>Staff Details</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <Grid container spacing={4}>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="first_name">First Name *</InputLabel>
+            <Paper className={classes.paper}>              
+              <Grid container spacing={4}>
+                <Grid item xs={12} sm={12}>
+                  <Typography variant="h6" className={classes.labelTitle}> Staff Details </Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <InputLabel  className={classes.textsize} htmlFor="first_name">First Name *</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {
@@ -272,8 +251,8 @@ return (
                       type="text"
                       margin="dense"
                     />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
+                </Grid>
+                <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="last_name">Last Name</InputLabel>
                     <TextField 
                       InputProps={{
@@ -292,8 +271,8 @@ return (
                       required
                       fullWidth
                     />
-                  </Grid>
-                  <Grid item xs={12} sm={12}>
+                </Grid>
+                <Grid item xs={12} sm={12}>
                     <InputLabel  className={classes.textsize} htmlFor="location">Location *</InputLabel>
                     <TextField 
                       InputProps={{
@@ -357,23 +336,11 @@ return (
                       fullWidth
                     />
                   </Grid>
-                </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <ExpansionPanel
-              className={classes.expansionTitle}
-              expanded={expanded === 'panel2'}
-              onChange={handleChange('panel2')}
-            >
-              <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls=""
-                id="panel2a-header"
-              >
-                <Typography className={(errors.pre_company_name||errors.pre_company_address||errors.pre_company_contact||errors.pre_position||errors.duration)?classes.errorHeading:classes.heading}>Previous Employer Details</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <Grid container spacing={4}>
+                  <Grid item xs={12} sm={12}>
+                    <Typography variant="h6" className={classes.labelTitle}>
+                      Previous Employer Details
+                    </Typography>
+                  </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="last_name">Name of Previous Company *</InputLabel>
                     <TextField 
@@ -501,15 +468,9 @@ return (
                       fullWidth
                     />
                   </Grid>
-                </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <ExpansionPanel className={classes.expansionTitle} expanded={expanded === 'panel3'} onChange={handleChange('panel3')} >
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="" id="panel3a-header">
-                <Typography className={(errors.password || errors.assign_role) ? classes.errorHeading:classes.heading}>Current Job Role</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <Grid container spacing={4}>
+                  <Grid item xs={12} sm={12}>
+                    <Typography variant="h6" className={classes.labelTitle}> Current Job Role </Typography>
+                  </Grid>
                   <Grid item xs={12} sm={6}>
                     <InputLabel  className={classes.textsize} htmlFor="user_id">User Id</InputLabel>
                     <TextField 
@@ -567,27 +528,14 @@ return (
                         return( <MenuItem value={ele.id}>{ele.name}</MenuItem> )
                       })}
                     </Select>
-                  </Grid>
-                </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <Grid item xs={12} sm={12}>
-            {savebtn? <Button variant="contained" onClick={handleSubmit}  color="primary" className={classes.button} >
-                Save
-              </Button>  :
-              <Button variant="contained" onClick={handleSubmit}  color="primary" className={classes.button} >
-              Save
-            </Button>}
-              <Button  variant="contained"   onClick={handleClose} color="primary" className={classes.button} >
-                Close
-              </Button>
+                  </Grid>                
+              <Grid item xs={12} sm={12}>
+                <Button variant="contained" onClick={handleSubmit}  color="primary" className={classes.button} disabled = {savebtn}> Save </Button>
+                <Button variant="contained" onClick={() => {setOpen(false)}} color="primary" className={classes.button} > Close </Button>
               </Grid>
-            
+            </Grid>
+          </Paper>
           </div>
-        </form>
-        
-
       </Dialog>
-    </div>
   );
 }

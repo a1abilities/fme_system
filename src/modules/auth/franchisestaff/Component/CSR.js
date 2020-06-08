@@ -78,6 +78,17 @@ return (
             <CreateIcon/>
             </IconButton>
           </Tooltip>
+          <Tooltip title="Download Document">
+            <IconButton  size="small" value={data.id} name={data.id} component="span">
+              { data.employment_docs !== "" ?
+                <a href={API_URL + "/api/download?path=franchiseStaff/" + data.employment_docs} style = {{color: 'currentColor'}}>
+                  <PrintIcon />
+                </a>
+                :
+                <PrintIcon />
+              }
+            </IconButton>
+          </Tooltip>
         </StyledTableCell>
       </TableRow>
       )      
