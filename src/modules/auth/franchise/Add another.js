@@ -420,7 +420,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
         if(result.selectedArea != ""){
           setSelectedArea(result.selectedArea);
         }else{
-          alert('All existing area already assigned to other franchise..');
+          alert('All existing area already assigned to other Organisation..');
         }
       } catch (error) {
         setIsError(true);
@@ -486,7 +486,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
           <AppBar className={classes.appBar}>
             <Toolbar>
               <Typography variant="h6" className={classes.title}>
-                Add Franchise
+                Add Organisation
               </Typography>
                 <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
               </Toolbar>
@@ -496,7 +496,7 @@ export default function Add({ open, handleClose, handleSnackbarClick, setFranchi
             <Grid item xs={12} sm={12}>   {ploading ?  <LinearProgress />: null}</Grid>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={4}>
-                    <InputLabel className={classes.textsize} htmlFor="franchise">Franchise Name*</InputLabel>
+                    <InputLabel className={classes.textsize} htmlFor="franchise">Organisation Name*</InputLabel>
                     <TextField 
                       InputProps={{
                         classes: {

@@ -242,7 +242,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
                 aria-controls=""
                 id="panel1a-header"
               >
-              <Typography className={classes.heading}>Franchise Details</Typography>
+              <Typography className={classes.heading}>Organisation Details</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <Grid container spacing={3}>

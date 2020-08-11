@@ -742,7 +742,7 @@ export default function ClippedDrawer(props) {
             {/* <StyledTreeItem nodeId="10" labelText="Appointment" color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleAppointmentClick('Super Admin', 1); }} />       */}
 
             <StyledTreeItem nodeId="1" labelText="Dashboard" color="#1a73e8" bgColor="#e8f0fe" labelIcon={BusinessIcon} onClick={(event) => { handleDashboardClick('Super Admin', 1); }} />            
-            <StyledTreeItem nodeId="2" labelText="Manage Franchise"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={FranchiseIcon} onClick={(event) => { handleFranchiseClick('Super Admin'); }}/>
+            <StyledTreeItem nodeId="2" labelText="Manage Organisation"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={FranchiseIcon} onClick={(event) => { handleFranchiseClick('Super Admin'); }}/>
             <StyledTreeItem nodeId="3" labelText="Manage Product Catalogue"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={ProductIcon} onClick={(event) => { handleCategoryClick('Super Admin'); }}/>
             <StyledTreeItem nodeId="4" labelText="Manage Staff"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={StaffIcon} onClick={(event) => { handleMasterStaffClick('Super Admin'); }} />
             <StyledTreeItem nodeId="5" labelText="Manage Leads"  color="#1a73e8" bgColor="#e8f0fe" labelIcon={LeadIcon} onClick={(event) => { handleLeadsClick('Super Admin'); }}/>
