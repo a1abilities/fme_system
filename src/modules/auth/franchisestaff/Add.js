@@ -511,7 +511,7 @@ return (
                   <Grid item xs={12} sm={6}>
                   <InputLabel  className={classes.textsize} htmlFor="assign_role">Assign Role</InputLabel>
                     <Select
-                      multiple
+                      
                       value={inputs.assign_role}
                       onChange={handleInputChange}
                       inputProps={{

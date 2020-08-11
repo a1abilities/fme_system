@@ -1,13 +1,13 @@
 // This will be in some JSON config we'll say
 let dbOptions = '';
-let dbName = 'a1abiliti_fme';
+let dbName = 'connectiv_fme';
 const { env } = require("../lib/databaseMySQLNew");
 
 if (env === 'dev' || env === 'uat' || env === 'prod') {
    dbOptions = {
       host: 'localhost',
-      user: 'root',
-      password: '6mNMX9Ln0oykXKic',
+      user: 'connectiv_fme',
+      password: 'Rj$Ef0ZIa',
       port: 3306
 
       // database: 'rentronics'

@@ -25,7 +25,8 @@ const WelcomeMessage = ({ classes }) => {
       {/* <Typography variant="display1" gutterBottom className={classes.heading}>
         Welcome To
       </Typography> */}
-      <img src="/images/logo_transparent.png" alt="app logo" className={classes.logo} />
+    {/* <h1>Organistion </h1> */}
+      <img src="/images/o.png" alt="app logo" className={classes.logo} />
     </Fragment>
   );
 };
