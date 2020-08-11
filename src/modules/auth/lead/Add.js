@@ -341,7 +341,7 @@ return (
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <InputLabel  className={classes.textsize} htmlFor="last_name">Franchise *</InputLabel>
+                    <InputLabel  className={classes.textsize} htmlFor="last_name"> Organisation *</InputLabel>
                       <BasicSelect
                         value={inputs.franchise_id}
                         onChange = {handleFranchise}

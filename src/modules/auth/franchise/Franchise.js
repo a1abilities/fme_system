@@ -281,7 +281,7 @@ export default function Franchise({roleName}) {
               onClick={handleClickOpen} elevation={0} 
             >
               <AddIcon className={classes.extendedIcon}  />
-              Franchise
+              Organisation
             </Fab>
           </Grid>
           <AppBar position="static"  className={classes.appBar}>

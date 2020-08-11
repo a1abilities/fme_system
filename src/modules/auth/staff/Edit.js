@@ -103,7 +103,7 @@ export default function Edit({open, handleEditClose, handleSnackbarClick,  input
       position: inputs.position.join(),
       created_by: 1,
     });
-      handleSnackbarClick(true,'Franchise Updated Successfully');
+      handleSnackbarClick(true,' Organisation Updated Successfully');
       setFranchiseList(response.staffList);
       handleEditClose(false);
   };

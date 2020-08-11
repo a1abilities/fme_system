@@ -4,7 +4,7 @@ export default function validateEdit(values) {
   let errors = {};
   
   if (!values.franchise_name) {
-    errors.franchise_name = 'Franchise Name is required';
+    errors.franchise_name = ' Organisation Name is required';
   }else if(!validAlpha.test(values.franchise_name)){
     errors.franchise_name = 'Special characters are not allowed';
   }
