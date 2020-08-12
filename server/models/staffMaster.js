@@ -157,7 +157,7 @@ StaffMaster.prototype.searchData = function () {
         reject(error);
       }
       connection.release();
-      console.log('Customer Added for Franchise Staff %d', connection.threadId);
+      console.log('Customer Added for Organisation Staff %d', connection.threadId);
     });
   }).catch((error) => {
     throw error;

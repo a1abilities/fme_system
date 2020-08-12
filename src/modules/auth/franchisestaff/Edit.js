@@ -470,7 +470,7 @@ export default function Edit({open, setEditOpen, setIsLoading, fetchStaffList, r
               <Grid item xs={12} sm={6}>
               <InputLabel  className={classes.textsize} htmlFor="assign_role">Assign Role</InputLabel>
                 <Select
-                  multiple
+                  
                   value={assignRole}
                   onChange={handleChangeMultiple}
                   inputProps={{

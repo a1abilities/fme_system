@@ -85,9 +85,9 @@ const LoginForm = ({ value, isLoading, onChange, onSubmit, classes }) => {
         {isLoading ? <CircularProgress size={20} /> : 'Login'}
       </Button>
     </form>
-      <div style = {{ position : 'fixed', bottom : '10px', right : '217px',  }} > Powered by: </div>
+      {/* <div style = {{ position : 'fixed', bottom : '10px', right : '217px',  }} > Powered by: </div> */}
       <div style={{position:'fixed',bottom:'-5px',right:'10px'}}>
-        <img src="/images/A1AbilitiesLogo.jpeg" alt="A1abilities" className={classes.a1Logo} />
+        {/* <img src="/images/A1AbilitiesLogo.jpeg" alt="A1abilities" className={classes.a1Logo} /> */}
       </div>
     </div>
   );

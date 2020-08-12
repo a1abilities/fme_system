@@ -176,7 +176,7 @@ export default function FranchiseStaff({roleName}) {
       <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <Fab variant="extended" size="small" className={classes.fonttransform} onClick={handleClickOpen} >
-              <AddIcon className={classes.extendedIcon} /> Franchise Staff
+              <AddIcon className={classes.extendedIcon} /> Organisation Staff
             </Fab>
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -211,11 +211,11 @@ export default function FranchiseStaff({roleName}) {
               <AppBar position="static"  className={classes.appBar}>
                 <Tabs value={value} onChange={handleTabChange} className={classes.textsize} variant="scrollable" scrollButtons="auto">
                   <Tab label={<BadgeComp count={tabsCount.total} label="All" />} />
-                  <Tab label={<BadgeComp count={tabsCount.csr} label="CSR" />} />
-                  <Tab label={<BadgeComp count={tabsCount.finance} label="Finance" />} />
-                  <Tab label={<BadgeComp count={tabsCount.delivery} label="Delivery" />} />                  
-                  <Tab label={<BadgeComp count={tabsCount.hr} label="HR" />} />
-                  <Tab label={<BadgeComp count={tabsCount.snm} label="S&amp;M" />} />
+                  <Tab label={<BadgeComp count={tabsCount.csr} label=" 	Executive 1 	" />} />
+                  <Tab label={<BadgeComp count={tabsCount.finance} label=" 	Executive 2" />} />
+                  <Tab label={<BadgeComp count={tabsCount.delivery} label=" 	Executive 3" />} />                  
+                  <Tab label={<BadgeComp count={tabsCount.hr} label=" 	Executive 4" />} />
+                  <Tab label={<BadgeComp count={tabsCount.snm} label=" 	Executive 5" />} />
                   <Tab label={<BadgeComp count={tabsCount.inactive_staff} label="Inactive Staff" />} />
                 </Tabs>
               </AppBar>
