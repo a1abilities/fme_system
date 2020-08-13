@@ -6,8 +6,8 @@ const { env } = require("../lib/databaseMySQLNew");
 if (env === 'dev' || env === 'uat' || env === 'prod') {
    dbOptions = {
       host: 'localhost',
-      user: 'connectiv_fme',
-      password: 'Rj$Ef0ZIa',
+      user: 'root',
+      password: '6mNMX9Ln0oykXKic',
       port: 3306
 
       // database: 'rentronics'
