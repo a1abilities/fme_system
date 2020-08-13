@@ -38,7 +38,7 @@ export default function validate(values, preErrors) {
     }
   }
 
-  if (Object.values(values.assign_role).length === 0) {
+  if (Object.values(values.assign_role).length === 1) {
     errors.assign_role = 'Assign Role is required';
   }
 
