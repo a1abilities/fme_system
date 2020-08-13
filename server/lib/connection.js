@@ -3,7 +3,7 @@ let dbOptions = '';
 let dbName = 'connectiv_fme';
 const { env } = require("../lib/databaseMySQLNew");
 
-if (env === 'dev' || env === 'uat' || env === 'prod') {
+if (env === 'dev' || env === 'uat' || env === 'fme') {
    dbOptions = {
       host: 'localhost',
       user: 'root',
