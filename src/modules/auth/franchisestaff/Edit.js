@@ -146,8 +146,8 @@ export default function Edit({open, setEditOpen, setIsLoading, fetchStaffList, r
         
         user_id: inputs.user_id,
         password: inputs.password,
-        role: inputs.assign_role.join(),
-
+        // role: inputs.assign_role.join(),
+        role: String(inputs.assign_role),
         is_active : inputs.is_active,
       };
 

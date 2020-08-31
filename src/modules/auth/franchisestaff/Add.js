@@ -168,7 +168,8 @@ export default function Add({ open, fetchStaffList, setOpen, setIsLoading, role}
       
       user_id: inputs.user_id,
       password: inputs.password,
-      role: inputs.assign_role.join(),
+      // role: inputs.assign_role.join(),
+      role: String(inputs.assign_role),
       is_active : 1,
     };
 
@@ -183,7 +184,7 @@ export default function Add({ open, fetchStaffList, setOpen, setIsLoading, role}
     handleReset(RESET_VALUES);
     setSavebtn(false);
     setIsLoading(false);    
-    setOpen(false);   
+    setOpen(false);
     fetchStaffList(); 
   };
 
@@ -193,7 +194,7 @@ export default function Add({ open, fetchStaffList, setOpen, setIsLoading, role}
     addFranchiseStaff,
     validate
   );
-  
+  // console.log(inputs)
   function handleNameBlurChange(e) {
     setInput('user_id', generate(inputs.first_name, inputs.last_name));
   }

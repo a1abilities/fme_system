@@ -13,6 +13,7 @@ const PARAMS = ({ methodType = 'GET' }) => ({
 
 export default {
   register: async ( newStaff ) => {
+    
     const URL = `${c.API_CONSUMER}/api/franchise/staff/register`;
     try {
       const { data } = await axios(URL, {

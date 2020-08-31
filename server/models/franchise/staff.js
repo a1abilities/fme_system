@@ -58,12 +58,9 @@ Staff.prototype.register = function () {
           });
 
           connection.query('INSERT INTO staff(franchise_user_id, first_name, last_name, location, contact, email, pre_company_name, pre_company_address, pre_company_contact, pre_position, duration, user_id, password, role, employment_docs, created_by) values ("' + savedUserId + '","' + that.first_name + '","' + that.last_name + '","' + that.location + '","' + that.contact + '","' + that.email + '","' + that.pre_company_name + '","' + that.pre_company_address + '","' + that.pre_company_contact + '","' + that.pre_position + '", "' + that.duration + '", "' + that.user_id + '", AES_ENCRYPT("' + that.password + '", "secret"), "' + that.role + '", "' + that.employment_docs + '", "' + that.created_by + '")', function (error, rows, fields) {
-            if (!error) {
+            if (error) { console.log("Error...", error); reject(error);}
+            console.log(rows)
               resolve(rows);
-            } else {
-              console.log("Error...", error);
-              reject(error);
-            }
           });
         });
       } else {
